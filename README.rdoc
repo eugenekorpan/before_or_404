@@ -1,4 +1,4 @@
-== BeforeOr404
+== BeforeOr404 {<img src="https://travis-ci.org/eugenekorpan/before_or_404.png" alt="Build Status" />}[https://travis-ci.org/eugenekorpan/before_or_404] {<img src="https://codeclimate.com/github/eugenekorpan/before_or_404.png" />}[https://codeclimate.com/github/eugenekorpan/before_or_404]
 
 Very simple gem that adds additional filter <code>before_or_404</code> to ActionController::Base.
 It behaves just as a regular <code>before_filter</code> but in a case when error raises in the filter it returns 404 page with 404 status.
