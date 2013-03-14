@@ -1,0 +1,84 @@
+== BeforeOr404
+
+Very simple gem that adds additional filter <code>before_or_404</code> to ActionController::Base.
+It behaves just as a regular <code>before_filter</code> but in a case when error raises in the filter it returns 404 page with 404 status.
+
+== Installation
+
+1 Add this line to your application's Gemfile:
+
+    gem 'before_or_404'
+
+2 And then execute:
+
+    $ bundle
+
+== When to use it
+
+Let's say you have a restful controller and appropriate url to edit a resource 
+
+    http://bestsite.com/books/3/edit
+
+And you have a <code>before_filter</code> to avoid duplication
+
+    class BooksController < ApplicationController
+      before_filter :find_book, :only => [:show, :edit, :update, :destroy]
+
+      ...
+
+      private
+
+      def find_book
+        @book = Book.find(params[:id])
+      end
+    end
+
+But what if I manually change the id in the url to one which is invalid
+
+    http://bestsite.com/books/just a super book/edit
+
+Then this url considered to be invalid and hence user should see 404 page ("Page not found")
+In this case you could do the next
+  
+    class BooksController < ApplicationController
+      before_filter :find_book, :only => [:show, :edit, :update, :destroy]
+
+      ...
+
+      private
+
+      def page_not_found
+        render 'public/404', status: 404
+      end
+
+      def find_book
+        @book = Book.find_by_id(params[:id])
+        @book || page_not_found
+      end
+    end
+
+But this meens you should do this in every <code>before_filter</code> where you find a resource by id which comes as a part of url.
+As alternative you could use <code>before_or_404</code> instead of <code>before_filter</code>.
+
+== Usage Example
+
+    class UsersController < ApplicationController
+      before_or_404 :find_user, only: [:show, :edit, :destroy]
+
+      ...
+
+      private
+
+      def find_user
+        @user = User.find(params[:id])
+      end
+
+    end
+
+== Contributing
+
+1. Fork it
+2. Create your feature branch (<code>git checkout -b my-new-feature</code>)
+3. Commit your changes (<code>git commit -am 'Added some feature'</code>)
+4. Push to the branch (<code>git push origin my-new-feature</code>)
+5. Create new Pull Request
